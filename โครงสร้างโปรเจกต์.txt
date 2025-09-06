@@ -1,0 +1,12 @@
+/public_html/
+├── 📄 index.php         (หน้าหลักที่แสดงผลทั้งหมด)
+├── 📄 style.css         (ไฟล์สไตล์ชีต)
+├── 📄 script.js         (ไฟล์ JavaScript ที่ควบคุมการทำงานทั้งหมด)
+├── 📄 config.php        (ไฟล์ตั้งค่าการเชื่อมต่อฐานข้อมูล)
+└── 📁 api/
+    ├── 📄 get_data.php      (สำหรับดึงข้อมูลสินค้าและการตั้งค่า)
+    ├── 📄 add_product.php   (สำหรับเพิ่มสินค้าใหม่)
+    ├── 📄 update_settings.php (สำหรับบันทึกการตั้งค่า)
+    └── 📄 delete_product.php (โบนัส: สำหรับลบสินค้า)
+    └── 📄 update_product.php
+    

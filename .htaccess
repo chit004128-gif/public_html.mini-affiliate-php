@@ -1,0 +1,103 @@
+# ===================================================================
+# Mini Affiliate Shop .htaccess
+# เวอร์ชัน: แนะนำ (Security + Performance + SEO)
+# ===================================================================
+
+# เปิดใช้งานโมดูล Rewrite
+RewriteEngine On
+
+# -------------------------------------------------------------------
+# ส่วนที่ 1: ความปลอดภัย (Security First)
+# -------------------------------------------------------------------
+
+# ป้องกันการแสดงรายชื่อไฟล์ในโฟลเดอร์ทั้งหมด
+Options -Indexes
+
+# ป้องกันการเข้าถึงไฟล์ที่มีความอ่อนไหวโดยตรงจากเบราว์เซอร์
+<FilesMatch "(\.htaccess|config\.php)">
+    Require all denied
+</FilesMatch>
+
+# ป้องกัน Cross-Site Scripting (XSS) บางรูปแบบ
+RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} GLOBALS(=|[|%[0-9A-Z]{0,2}) [OR]
+RewriteCond %{QUERY_STRING} _REQUEST(=|[|%[0-9A-Z]{0,2})
+RewriteRule .* - [F,L]
+
+# -------------------------------------------------------------------
+# ส่วนที่ 2: SEO และการกำหนด URL หลัก (Canonical & SEO)
+# -------------------------------------------------------------------
+
+# บังคับให้ใช้ HTTPS (ถ้าโฮสติ้งมี SSL Certificate ซึ่ง Hostinger มีให้)
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# --- เลือก 1 แบบ: บังคับ www หรือ ไม่บังคับ www ---
+# เพื่อป้องกันปัญหา Duplicate Content ในสายตา Google
+
+# >> แบบที่ 1: บังคับให้มี www (ถ้าคนเข้า yourdomain.com จะถูกส่งไป www.yourdomain.com)
+# RewriteCond %{HTTP_HOST} !^www\. [NC]
+# RewriteRule ^(.*)$ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# >> แบบที่ 2: บังคับให้ไม่มี www (ถ้าคนเข้า www.yourdomain.com จะถูกส่งไป yourdomain.com)
+# ให้เอา # ออกจาก 2 บรรทัดข้างล่างนี้ ถ้าคุณต้องการใช้แบบนี้
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://%1%{REQUEST_URI} [L,R=301]
+
+
+# -------------------------------------------------------------------
+# ส่วนที่ 3: เพิ่มความเร็วเว็บ (Performance Boost)
+# -------------------------------------------------------------------
+
+# เปิดใช้งานการบีบอัดไฟล์ (Gzip/DEFLATE)
+# ช่วยลดขนาดไฟล์ HTML, CSS, JS ทำให้เว็บโหลดเร็วขึ้น
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+    AddOutputFilterByType DEFLATE application/x-font
+    AddOutputFilterByType DEFLATE application/x-font-opentype
+    AddOutputFilterByType DEFLATE application/x-font-otf
+    AddOutputFilterByType DEFLATE application/x-font-truetype
+    AddOutputFilterByType DEFLATE application/x-font-ttf
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE font/opentype
+    AddOutputFilterByType DEFLATE font/otf
+    AddOutputFilterByType DEFLATE font/ttf
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE image/x-icon
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+</IfModule>
+
+# เปิดใช้งานการจำไฟล์ในเบราว์เซอร์ (Browser Caching)
+# สั่งให้ผู้ใช้ที่เคยเข้าเว็บแล้ว ไม่ต้องโหลดไฟล์เดิมซ้ำๆ
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+
+    ExpiresByType application/pdf "access plus 1 month"
+
+    ExpiresByType application/x-shockwave-flash "access plus 1 month"
+</IfModule>
+
+# -------------------------------------------------------------------
+# ส่วนที่ 4: การจัดการข้อผิดพลาด (Error Handling) - ทางเลือก
+# -------------------------------------------------------------------
+
+# หากต้องการสร้างหน้า 404 Not Found ของตัวเอง ให้สร้างไฟล์ 404.html
+# แล้วเอาเครื่องหมาย # หน้าบรรทัดข้างล่างออก
+# ErrorDocument 404 /404.html
