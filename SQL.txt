@@ -1,0 +1,35 @@
+-- ตารางสำหรับเก็บสินค้า
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `url` text NOT NULL,
+  `image` text,
+  `category` varchar(100) NOT NULL,
+  `rating` decimal(2,1) DEFAULT 4.5,
+  `sold` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ตารางสำหรับเก็บการตั้งค่า
+CREATE TABLE `settings` (
+  `setting_key` varchar(50) NOT NULL,
+  `setting_value` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`setting_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- เพิ่มข้อมูลสินค้าตัวอย่าง
+INSERT INTO `products` (`name`, `price`, `url`, `image`, `category`, `rating`, `sold`) VALUES
+('หูฟังบลูทูธ True Wireless', 799.00, 'https://shopee.co.th/product/123456/111', 'https://images.unsplash.com/photo-1518442362770-d47f6e8c61c0?q=80&w=1200&auto=format&fit=crop', 'อิเล็กทรอนิกส์', 4.7, 1200),
+('เครื่องชงกาแฟพกพา', 1290.00, 'https://shopee.co.th/product/234567/222', 'https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1200&auto=format&fit=crop', 'บ้าน & ครัว', 4.8, 860),
+('โคมไฟตั้งโต๊ะมินิมอล', 459.00, 'https://shopee.co.th/product/345678/333', 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1200&auto=format&fit=crop', 'ตกแต่งบ้าน', 4.6, 530);
+
+-- เพิ่มข้อมูลการตั้งค่าเริ่มต้น
+INSERT INTO `settings` (`setting_key`, `setting_value`) VALUES
+('affiliateId', 'MY_AFF_ID'),
+('affiliateParamKey', 'aff_id'),
+('subIdKey', 'sub_id'),
+('subIdValue', 'home'),
+('utmCampaign', 'launch'),
+('utmMedium', 'mini-shop'),
+('utmSource', 'affiliate');
